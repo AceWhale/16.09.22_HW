@@ -11,7 +11,7 @@ private:
 public:
 	MyString();
 	MyString(const char*);
-	MyString(const MyString&);
+	//MyString(const MyString&);
 	~MyString();
 	static void ObjCount();
 	void Init();
@@ -28,6 +28,18 @@ public:
 	char operator[](int index);
 	operator int();
 	operator char*();
+	MyString(MyString&& b)
+	{
+		str = b.str;
+		b.str = nullptr;
+	}
+	MyString& operator=(MyString&& b)
+	{
+		cout << "Move = \n";
+		this->str = b.str;
+		b.str = nullptr;
+		return *this;
+	}
 };
 int MyString::obj_count = 0;
 
@@ -45,13 +57,13 @@ MyString::MyString(const char* text)
 	length = strlen(text);
 	obj_count++;
 }
-MyString::MyString(const MyString& obj)
-{
-	str = new char[strlen(obj.str) + 1];
-	strcpy_s(str, strlen(obj.str) + 1, obj.str);
-	length = strlen(obj.str);
-	obj_count++;
-}
+//MyString::MyString(const MyString& obj)
+//{
+//	str = new char[strlen(obj.str) + 1];
+//	strcpy_s(str, strlen(obj.str) + 1, obj.str);
+//	length = strlen(obj.str);
+//	obj_count++;
+//}
 
 MyString::~MyString()
 {
@@ -202,11 +214,12 @@ void MyString::ObjCount()
 int main()
 {
 	MyString obj1("Hello");
-	MyString obj2("World!!!");
-	obj1.Print();
+	MyString obj2(move(obj1));
+	obj2.Print();
+	/*obj1.Print();
 	obj2.Print();
 	obj1 = obj2;
 	cout << endl;
 	obj1();
-	cout << endl << obj1[0];
+	cout << endl << obj1[0];*/
 }
