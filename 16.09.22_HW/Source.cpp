@@ -40,6 +40,7 @@ public:
 		b.str = nullptr;
 		return *this;
 	}
+	MyString(initializer_list<char> a);
 };
 int MyString::obj_count = 0;
 
@@ -205,6 +206,15 @@ MyString::operator int()
 MyString::operator char* ()
 {
 	return str;
+}
+MyString::MyString(initializer_list<char> a)
+{
+	length = a.size();
+	str = new char[length];
+	for (int i = 0; i < a.size(); i++)
+	{
+		str[i] = a.begin()[i];
+	}
 }
 void MyString::ObjCount()
 {
