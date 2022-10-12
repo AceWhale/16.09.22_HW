@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <cstring>
+#include "Header.h"
 using namespace std;
 
 class MyString
@@ -53,6 +54,8 @@ MyString::MyString()
 
 MyString::MyString(const char* text)
 {
+	if (text == nullptr)
+		throw new NullException("УКАЗАТЕЛЬ НЕ СОДЕРЖИТ ДАННЫЕ\n");
 	str = new char[strlen(text) + 1];
 	strcpy_s(str, strlen(text) + 1, text);
 	length = strlen(text);
@@ -134,6 +137,8 @@ void MyString::MyStrCat(const MyString& b)
 
 void MyString::MyDelChr(char c)
 {
+	if (length == 0)
+		throw new SizeException("РАЗМЕР СТРОКИ НЕ МОЖЕТ БЫТЬ РАВЕН 0");
 	int count = 0;
 	for (int i = 0; i < strlen(str); i++)
 	{
@@ -194,6 +199,8 @@ void MyString::operator()()
 }
 char MyString::operator[](int index)
 {
+	if (index < 0 || index >= length)
+		throw new IndexException("ИНДЕКС УКАЗЫВАЕТ ЗА МАССИВ\n");
 	if (index >= 0 && index < strlen(str))
 		return str[index];
 	else
@@ -223,13 +230,19 @@ void MyString::ObjCount()
 
 int main()
 {
-	MyString obj1("Hello");
-	MyString obj2(move(obj1));
-	obj2.Print();
-	/*obj1.Print();
-	obj2.Print();
-	obj1 = obj2;
-	cout << endl;
-	obj1();
-	cout << endl << obj1[0];*/
+	setlocale(LC_ALL, "ru");
+	MyString obj1("Hello World!!!");
+	MyString obj_zero("");
+	char c = '\0';
+	const char* ptr_null = nullptr;
+	try
+	{
+		MyString obj2(ptr_null);
+		obj_zero.MyDelChr(c);
+		cout << obj1[-1];
+	}
+	catch (BaseException* b)
+	{
+		b->Print();
+	}
 }
